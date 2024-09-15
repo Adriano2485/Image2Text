@@ -1,6 +1,6 @@
-# TextSnap
+# Image2Text
 
-## TextSnap is a Flutter app designed to extract text from images seamlessly. Whether users capture an instant photo or select an image from their gallery, TextSnap leverages advanced text recognition technology to provide accurate and quick text extraction.
+## Image2Text is a Flutter app designed to extract text from images seamlessly. Whether users capture an instant photo or select an image from their gallery,  Image2Text leverages advanced text recognition technology to provide accurate and quick text extraction.
 
 ### Features:
     Instant Capture: Take a photo directly within the app to instantly extract text.
@@ -12,3 +12,4 @@
     Flutter: Framework for building the app.
     Google ML Kit: Provides text recognition capabilities.
     ImagePicker: Allows users to select images from the gallery or take a new photo.
+    ImageCropper: Allows users to crop the selected image.
