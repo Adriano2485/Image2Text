@@ -12,3 +12,4 @@
     Flutter: Framework for building the app.
     Google ML Kit: Provides text recognition capabilities.
     ImagePicker: Allows users to select images from the gallery or take a new photo.
+    ImageCropper: Allows users to crop the selected image.
