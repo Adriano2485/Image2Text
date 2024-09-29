@@ -1,7 +1,9 @@
 import 'ImportAll.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
+  // runApp(CloudVision());
+  // runApp(EntityExtractionExample());
 }
 
 class MyApp extends StatelessWidget {
@@ -16,6 +18,9 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: HomePage(),
+      // home: EntityExtractionExample(),
+      // home: EntityExtractionView(),
+      // home: DocumentScannerView(),
     );
   }
 }

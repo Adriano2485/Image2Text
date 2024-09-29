@@ -318,7 +318,7 @@ class _HomePageState extends State<HomePage> {
       );
       final InputImage inputImage = InputImage.fromFile(file);
       final RecognizedText recognizedText =
-      await textRecognizer.processImage(inputImage);
+          await textRecognizer.processImage(inputImage);
       String text = recognizedText.text;
       textRecognizer.close();
       return text;
@@ -335,10 +335,11 @@ class _HomePageState extends State<HomePage> {
       );
       final InputImage inputImage = InputImage.fromFile(file);
       final RecognizedText recognizedText =
-      await textRecognizer.processImage(inputImage);
+          await textRecognizer.processImage(inputImage);
       String text = recognizedText.text;
 
       List<wordpoint> allword = [];
+
 
       for (TextBlock block in recognizedText.blocks) {
         for (TextLine line in block.lines) {
@@ -354,10 +355,24 @@ class _HomePageState extends State<HomePage> {
       textRecognizer.close();
       list.add(text);
       list.add(allword);
+
+      find_difference(allword);
       return list;
     } on Exception catch (e) {
       // TODO
     }
+  }
+
+  void find_difference(List<wordpoint> wordpoints) {
+    int  mx_y = 0;
+    for (wordpoint word in wordpoints) {
+      for (wordpoint anotherword in wordpoints) {
+        int toplefty =
+            (word.cornerPoints[0].y - anotherword.cornerPoints[0].y).abs();
+        mx_y = max(mx_y, toplefty);
+      }
+    }
+    print('max_y: $mx_y');
   }
 }
 
