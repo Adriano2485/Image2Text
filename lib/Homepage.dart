@@ -340,7 +340,6 @@ class _HomePageState extends State<HomePage> {
 
       List<wordpoint> allword = [];
 
-
       for (TextBlock block in recognizedText.blocks) {
         for (TextLine line in block.lines) {
           for (TextElement element in line.elements) {
@@ -364,7 +363,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void find_difference(List<wordpoint> wordpoints) {
-    int  mx_y = 0;
+    int mx_y = 0;
     for (wordpoint word in wordpoints) {
       for (wordpoint anotherword in wordpoints) {
         int toplefty =

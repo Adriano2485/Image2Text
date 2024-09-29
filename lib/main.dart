@@ -1,4 +1,5 @@
 import 'ImportAll.dart';
+import 'OCR_Doc_Scanner.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,7 +18,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: HomePage(),
+      // home: HomePage(),
+      home: OcrDocScanner(),
       // home: EntityExtractionExample(),
       // home: EntityExtractionView(),
       // home: DocumentScannerView(),
