@@ -1,5 +1,7 @@
-import 'dart:math';
+import 'dart:convert';
+import 'package:http_parser/http_parser.dart';
 import 'ImportAll.dart';
+import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,7 +14,6 @@ class _HomePageState extends State<HomePage> {
   File? selectedMedia;
   final ImagePicker _picker = ImagePicker();
   String extractedText = "";
-  List<wordpoint> wordpoints = [];
 
   void initState() {
     super.initState();
@@ -35,7 +36,7 @@ class _HomePageState extends State<HomePage> {
           extractedText = text ?? "";
         });
       }
-    } else {}
+    }
   }
 
   @override
@@ -101,7 +102,7 @@ class _HomePageState extends State<HomePage> {
         }
       }
     } on Exception catch (e) {
-      // TODO
+      // Handle exceptions if necessary
     }
   }
 
@@ -135,7 +136,7 @@ class _HomePageState extends State<HomePage> {
       }
       return null;
     } on Exception catch (e) {
-      // TODO
+      // Handle exceptions if necessary
     }
   }
 
@@ -195,17 +196,6 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(height: 10),
                 _extractTextView(),
                 SizedBox(height: 30),
-                Text(
-                  'Word corner points',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontFamily: 'Playwrite',
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-                SizedBox(height: 10),
-                _buildWordPointList(),
               ],
             ),
           ),
@@ -236,8 +226,8 @@ class _HomePageState extends State<HomePage> {
     }
     return Column(
       children: [
-        FutureBuilder<List<dynamic>?>(
-          future: _extractPoint(selectedMedia!),
+        FutureBuilder<String?>(
+          future: _extractText(selectedMedia!),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator();
@@ -249,9 +239,8 @@ class _HomePageState extends State<HomePage> {
             if (!snapshot.hasData || snapshot.data == null) {
               return const Text('No data found.');
             }
-            String extractedText = snapshot.data![0] as String;
             return Text(
-              extractedText,
+              snapshot.data!,
               style: const TextStyle(fontSize: 20),
             );
           },
@@ -270,108 +259,88 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildWordPointList() {
-    if (selectedMedia == null) {
-      return const Center(
-        child: Text(""),
-      );
+  // Future<String?> _extractText(File file) async {
+  //   try {
+  //     final String apiUrl =
+  //         'https://app.nanonets.com/api/v2/OCR/Model/{model_id}/LabelFile/'; // Update with your model ID
+  //     var request = http.MultipartRequest('POST', Uri.parse(apiUrl));
+  //
+  //     request.headers['Authorization'] = 'Basic ' +
+  //         base64Encode(utf8.encode(
+  //             'YOUR_API_KEY:')); // Replace YOUR_API_KEY with your actual API key
+  //
+  //     request.files.add(await http.MultipartFile.fromPath('file', file.path));
+  //
+  //     var response = await request.send();
+  //     if (response.statusCode == 200) {
+  //       var responseBody = await response.stream.bytesToString();
+  //       var jsonResponse = json.decode(responseBody);
+  //       String extractedText =
+  //           jsonResponse['ocr_text']; // Adjust this key based on API response
+  //       return extractedText;
+  //     } else {
+  //       return 'Error: Failed to fetch OCR data';
+  //     }
+  //   } catch (e) {
+  //     return 'Error: Failed to extract text';
+  //   }
+  // }
+
+  // Future<String?> extractTextFromImage(File file) async {
+  //   final String apiKey = 'e4aaceda-860b-11ef-9931-96a6f528b3cb'; // Replace with your API key
+  //   final String url = 'https://app.nanonets.com/api/v2/OCR/FullText';
+  //
+  //   var request = http.MultipartRequest('POST', Uri.parse(url));
+  //   request.headers.addAll(
+  //       {'Authorization': 'Basic ' + base64Encode(utf8.encode('$apiKey:'))});
+  //
+  //   // Add the image file to the request
+  //   request.files.add(await http.MultipartFile.fromPath('file', file.path,
+  //       contentType: MediaType('application', 'pdf')));
+  //
+  //   var response = await request.send();
+  //
+  //   if (response.statusCode == 200) {
+  //     var responseData = await http.Response.fromStream(response);
+  //     var data = json.decode(responseData.body);
+  //     return data['results']?[0]['text']; // Adjust based on response structure
+  //   } else {
+  //     print('Error: ${response.statusCode}');
+  //     return null;
+  //   }
+  // }
+  Future<String?> extractTextFromImage(File file) async {
+    final String apiKey = 'e4aaceda-860b-11ef-9931-96a6f528b3cb'; // Replace with your API key
+    final String url = 'https://app.nanonets.com/api/v2/OCR/FullText';
+
+    var request = http.MultipartRequest('POST', Uri.parse(url));
+    request.headers.addAll(
+        {'Authorization': 'Basic ' + base64Encode(utf8.encode('$apiKey:'))});
+
+    // Ensure you're using the correct content type for the image
+    request.files.add(await http.MultipartFile.fromPath('file', file.path));
+
+    var response = await request.send();
+
+    if (response.statusCode == 200) {
+      var responseData = await http.Response.fromStream(response);
+      var data = json.decode(responseData.body);
+      return data['results']?[0]['text']; // Adjust based on response structure
+    } else {
+      var responseData = await http.Response.fromStream(response);
+      print(
+          'Error: ${response.statusCode} - ${responseData.body}'); // Log error details
+      return null;
     }
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          FutureBuilder<List<dynamic>?>(
-            future: _extractPoint(selectedMedia!),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
-              }
-              if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              }
-              if (!snapshot.hasData || snapshot.data == null) {
-                return const Text('No data found.');
-              }
-
-              List<wordpoint> wordPoints = snapshot.data![1] as List<wordpoint>;
-
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ...wordPoints.map((point) {
-                    return Text(
-                      '${point.word}: TL=${point.cornerPoints[0]},  TR=${point.cornerPoints[1]}, BR=${point.cornerPoints[2]}, BL=${point.cornerPoints[3]}\n\n',
-                      style: TextStyle(fontSize: 17),
-                    );
-                  }).toList(),
-                ],
-              );
-            },
-          ),
-        ]);
   }
 
   Future<String?> _extractText(File file) async {
     try {
-      final textRecognizer = TextRecognizer(
-        script: TextRecognitionScript.latin,
-      );
-      final InputImage inputImage = InputImage.fromFile(file);
-      final RecognizedText recognizedText =
-          await textRecognizer.processImage(inputImage);
-      String text = recognizedText.text;
-      textRecognizer.close();
-      return text;
-    } on Exception catch (e) {
-      // TODO
+      return await extractTextFromImage(file);
+    } catch (e) {
+      print("Error: $e");
+      return "";
     }
-  }
-
-  Future<List<dynamic>?> _extractPoint(File file) async {
-    try {
-      List<dynamic> list = [];
-      final textRecognizer = TextRecognizer(
-        script: TextRecognitionScript.latin,
-      );
-      final InputImage inputImage = InputImage.fromFile(file);
-      final RecognizedText recognizedText =
-          await textRecognizer.processImage(inputImage);
-      String text = recognizedText.text;
-
-      List<wordpoint> allword = [];
-
-      for (TextBlock block in recognizedText.blocks) {
-        for (TextLine line in block.lines) {
-          for (TextElement element in line.elements) {
-            final current = element.text;
-            final List<Point<int>> cornerPoints = element.cornerPoints;
-            if (cornerPoints.isNotEmpty) {
-              allword.add(wordpoint(current, cornerPoints));
-            }
-          }
-        }
-      }
-      textRecognizer.close();
-      list.add(text);
-      list.add(allword);
-
-      find_difference(allword);
-      return list;
-    } on Exception catch (e) {
-      // TODO
-    }
-  }
-
-  void find_difference(List<wordpoint> wordpoints) {
-    int mx_y = 0;
-    for (wordpoint word in wordpoints) {
-      for (wordpoint anotherword in wordpoints) {
-        int toplefty =
-            (word.cornerPoints[0].y - anotherword.cornerPoints[0].y).abs();
-        mx_y = max(mx_y, toplefty);
-      }
-    }
-    print('max_y: $mx_y');
   }
 }
 
@@ -381,11 +350,4 @@ class CropAspectRatioPresetCustom implements CropAspectRatioPresetData {
 
   @override
   String get name => '2x3 (customized)';
-}
-
-class wordpoint {
-  final String word;
-  final List<Point<int>> cornerPoints;
-
-  wordpoint(this.word, this.cornerPoints);
 }

@@ -729,7 +729,7 @@ class _OcrDocScannerState extends State<OcrDocScanner> {
                 // Find the correct group for this Y coordinate within the tolerance
                 int foundKey = -1;
                 for (var key in groupedWords.keys) {
-                  if ((yCoordinate >= key - 3) && (yCoordinate <= key + 3)) {
+                  if ((yCoordinate >= key - 6) && (yCoordinate <= key + 6)) {
                     foundKey = key;
                     break;
                   }

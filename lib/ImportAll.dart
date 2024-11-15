@@ -12,4 +12,3 @@ export 'package:camera/camera.dart';
 export 'package:google_mlkit_entity_extraction/google_mlkit_entity_extraction.dart';
 export 'package:flutter_pdfview/flutter_pdfview.dart';
 export 'package:google_mlkit_document_scanner/google_mlkit_document_scanner.dart';
-
