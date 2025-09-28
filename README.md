@@ -1,15 +1,20 @@
-# Image2Text
+# Flutter OCR 
 
-## Image2Text is a Flutter app designed to extract text from images seamlessly. Whether users capture an instant photo or select an image from their gallery,  Image2Text leverages advanced text recognition technology to provide accurate and quick text extraction.
+Optical character recognition is a process of conversion of typed images, printed text into the machine-encoded text, which means it will give us a text from images that contains the text.
 
-### Features:
-    Instant Capture: Take a photo directly within the app to instantly extract text.
-    Gallery Selection: Choose an image from your gallery for text extraction.
-    Text Recognition: Utilizes Google ML Kit to accurately recognize and extract text from images.
-    User-Friendly Interface: Simple and intuitive UI for a smooth user experience.
+## Getting Started
 
-### Technologies Used:
-    Flutter: Framework for building the app.
-    Google ML Kit: Provides text recognition capabilities.
-    ImagePicker: Allows users to select images from the gallery or take a new photo.
-    ImageCropper: Allows users to crop the selected image.
+This project contains the code of OCR usage in flutter, It is defined in very easy way for newly flutter devs. Enjoy!!
+
+# References:
+
+# Medium Blog:
+- [OCR using Flutter](https://medium.com/flutterworld/ocr-using-flutter-6f5765af49a6)
+
+
+
+# Youtube Tutorial:
+
+[![Introduction to Flutter](https://i.imgur.com/AvdbJ3k.png)](https://www.youtube.com/watch?v=6cwnBBAVIwE "Little red riding hood - Click to Watch!")
+
+
